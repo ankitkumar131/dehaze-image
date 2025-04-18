@@ -1,6 +1,7 @@
 pillow
-opencv
+opencv-python
 numpy
 matplotlib
 keras
 tensorflow
+pyqt5
