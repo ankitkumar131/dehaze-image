@@ -201,6 +201,11 @@ def load_image():
                 
             dehazed_image = dehaze_image(original_image.copy())
             
+            # Clean up previous display components
+            for widget in main_container.winfo_children():
+                if isinstance(widget, tk.Frame) and widget not in [header_frame, button_frame]:
+                    widget.destroy()
+            
             if panel is not None:
                 panel.destroy()
             if canvas is not None:
