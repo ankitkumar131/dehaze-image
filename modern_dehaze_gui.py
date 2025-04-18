@@ -119,6 +119,10 @@ class DehazingThread(QThread):
 
 # Custom image viewer with zoom and pan capabilities
 class ImageViewer(QLabel):
+    # Add signals for synchronization
+    zoomChanged = pyqtSignal(float)
+    panChanged = pyqtSignal(int, int)
+    
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setAlignment(Qt.AlignCenter)
@@ -141,6 +145,7 @@ class ImageViewer(QLabel):
         self.panning = False
         self.last_pos = None
         self.original_pixmap = None
+        self._sync_in_progress = False
         
     def setImage(self, image):
         if image is None:
@@ -186,19 +191,22 @@ class ImageViewer(QLabel):
         self.setPixmap(temp_pixmap)
         
     def wheelEvent(self, event):
-        # Zoom in/out with mouse wheel
-        zoom_in_factor = 1.1
-        zoom_out_factor = 1 / zoom_in_factor
-        
-        if event.angleDelta().y() > 0:
-            self.zoom_factor *= zoom_in_factor
-        else:
-            self.zoom_factor *= zoom_out_factor
+        if not self._sync_in_progress:
+            # Zoom in/out with mouse wheel
+            zoom_in_factor = 1.1
+            zoom_out_factor = 1 / zoom_in_factor
             
-        # Limit zoom range
-        self.zoom_factor = max(0.1, min(5.0, self.zoom_factor))
-        
-        self.updatePixmap()
+            if event.angleDelta().y() > 0:
+                self.zoom_factor *= zoom_in_factor
+            else:
+                self.zoom_factor *= zoom_out_factor
+                
+            # Limit zoom range
+            self.zoom_factor = max(0.1, min(5.0, self.zoom_factor))
+            
+            self.updatePixmap()
+            # Emit signal for synchronization
+            self.zoomChanged.emit(self.zoom_factor)
         
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -212,18 +220,39 @@ class ImageViewer(QLabel):
             self.setCursor(QCursor(Qt.ArrowCursor))
             
     def mouseMoveEvent(self, event):
-        if self.panning and self.last_pos is not None:
+        if not self._sync_in_progress and self.panning and self.last_pos is not None:
             delta = event.pos() - self.last_pos
             self.pan_x += delta.x()
             self.pan_y += delta.y()
             self.last_pos = event.pos()
             self.updatePixmap()
+            # Emit signal for synchronization
+            self.panChanged.emit(self.pan_x, self.pan_y)
             
     def resetView(self):
-        self.zoom_factor = 1.0
-        self.pan_x = 0
-        self.pan_y = 0
-        self.updatePixmap()
+        if not self._sync_in_progress:
+            self.zoom_factor = 1.0
+            self.pan_x = 0
+            self.pan_y = 0
+            self.updatePixmap()
+            # Emit signals for synchronization
+            self.zoomChanged.emit(self.zoom_factor)
+            self.panChanged.emit(self.pan_x, self.pan_y)
+            
+    def syncZoom(self, zoom_factor):
+        if not self._sync_in_progress:
+            self._sync_in_progress = True
+            self.zoom_factor = zoom_factor
+            self.updatePixmap()
+            self._sync_in_progress = False
+            
+    def syncPan(self, x, y):
+        if not self._sync_in_progress:
+            self._sync_in_progress = True
+            self.pan_x = x
+            self.pan_y = y
+            self.updatePixmap()
+            self._sync_in_progress = False
 
 # Custom button with hover effects
 class StyledButton(QPushButton):
@@ -342,6 +371,12 @@ class ImageDehazingApp(QMainWindow):
         # Create image viewers
         self.original_viewer = ImageViewer()
         self.dehazed_viewer = ImageViewer()
+        
+        # Connect signals for synchronization
+        self.original_viewer.zoomChanged.connect(self.dehazed_viewer.syncZoom)
+        self.original_viewer.panChanged.connect(self.dehazed_viewer.syncPan)
+        self.dehazed_viewer.zoomChanged.connect(self.original_viewer.syncZoom)
+        self.dehazed_viewer.panChanged.connect(self.original_viewer.syncPan)
         
         # Create labels for the viewers
         original_container = QWidget()
