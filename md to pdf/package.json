@@ -1,0 +1,12 @@
+{
+  "name": "thesis-pdf-converter",
+  "version": "1.0.0",
+  "description": "Convert thesis markdown to PDF",
+  "main": "convert.js",
+  "scripts": {
+    "convert": "node convert.js"
+  },
+  "dependencies": {
+    "markdown-pdf": "^10.0.0"
+  }
+}

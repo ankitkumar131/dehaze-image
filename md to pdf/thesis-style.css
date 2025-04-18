@@ -1,0 +1,139 @@
+/* Thesis PDF Styling */
+
+body {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 18pt;
+  text-align: center;
+  margin-top: 2em;
+  margin-bottom: 1.5em;
+}
+
+h2 {
+  font-size: 16pt;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.3em;
+}
+
+h3 {
+  font-size: 14pt;
+}
+
+h4, h5, h6 {
+  font-size: 12pt;
+}
+
+p {
+  margin: 0.5em 0 1em;
+  text-align: justify;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  page-break-inside: avoid;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1em auto;
+  page-break-inside: avoid;
+}
+
+blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #666;
+  font-style: italic;
+}
+
+code {
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+pre code {
+  display: block;
+  padding: 1em;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  page-break-inside: avoid;
+}
+
+/* List styling */
+ul, ol {
+  margin: 0.5em 0 1em 2em;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* Page breaks */
+.page-break {
+  page-break-after: always;
+}
+
+/* Abstract styling */
+.abstract {
+  font-style: italic;
+  margin: 2em 3em;
+}
+
+/* Table of contents styling */
+.toc {
+  margin: 2em 0;
+}
+
+.toc ul {
+  list-style-type: none;
+}
+
+.toc a {
+  text-decoration: none;
+  color: #333;
+}
+
+/* References styling */
+.references {
+  margin-top: 2em;
+}
+
+.references p {
+  padding-left: 2em;
+  text-indent: -2em;
+  margin-bottom: 0.5em;
+}

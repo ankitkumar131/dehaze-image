@@ -1,0 +1,51 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# IDE files
+.idea/
+.vscode/
+
+node_modules/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Local development settings
+.env
+.env.local
+
+# Logs
+*.log
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.h5
+
+# Image files
+*.png
+*.jpg
+*.jpeg
+
+# Dataset directories
+no_smoke_images/
+smoke_images/
